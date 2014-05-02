@@ -1,5 +1,5 @@
 //A8 is for pressure sensor; A9 and A10 are for current and voltage
- *       Example of APM_Compass library (HMC5843 sensor).
+ /*       Example of APM_Compass library (HMC5843 sensor).
  *       Code by Jordi MuÒoz and Jose Julio. DIYDrones.com
  */
  #include "Timer.h"
@@ -352,9 +352,10 @@ void send_data10hz()
  
   //send through serial port
   for( uint8_t  i=0;i<PACKET_SIZE_10HZ;i++)
+  {
   Serial3.write(q_10hz.s[i]);
-  
-  
+   
+  }
   //Sending CRC
   Serial3.write((uint8_t)(crc>>8));
   Serial3.write((uint8_t)(crc & 0x00FF));
@@ -372,30 +373,40 @@ void send_data50hz()
   Serial3.write(0xCA);
 
  //STORING DATA
-  q_50hz.f[k]=acc.x;q_50hz.f[k+1]=acc.y;q_50hz.f[k+2]=acc.z;
+  /*q_50hz.f[k]=acc.x;q_50hz.f[k+1]=acc.y;q_50hz.f[k+2]=acc.z;
   k+=3;
   q_50hz.f[k]=gyro.x;q_50hz.f[k+1]=gyro.y;q_50hz.f[k+2]=gyro.y;
   k+=3;
   q_50hz.f[k]=ToDeg(ahrs.roll);q_50hz.f[k+1]=ToDeg(ahrs.pitch);q_50hz.f[k+2]=ToDeg(ahrs.yaw);
   k+=3;
   q_50hz.f[k]=-1001.0;q_50hz.f[k+1]=-1001.2;q_50hz.f[k+2]=-1001.3;
-    
+    */
+    q_50hz.f[k]=1001.1;q_50hz.f[k+1]=1001.3;q_50hz.f[k+2]=1001.7;
+  k+=3;
+  q_50hz.f[k]=2001.3;q_50hz.f[k+1]=1999.3;q_50hz.f[k+2]=1500.2;
+  k+=3;
+  q_50hz.f[k]=1020.6;q_50hz.f[k+1]=1023.7;q_50hz.f[k+2]=1014.1;
+  k+=3;
+  q_50hz.f[k]=-1001.0;q_50hz.f[k+1]=-1001.2;q_50hz.f[k+2]=-1001.3;
   //CRC16 Calculation
   uint16_t crc=0xFFFF;
   crc= crc16(crc, 0xFE);
   crc= crc16(crc, 0xCA);
   for ( uint8_t i = 0 ; i < PACKET_SIZE_50HZ ; i++ ) //CRC calculation starting from Header byte 
-       crc= crc16(crc, q_10hz.s[i]);
+       crc= crc16(crc, q_50hz.s[i]);
    
  
   //send Data through serial port
   for( uint8_t  i=0;i<PACKET_SIZE_50HZ;i++)
+  {
   Serial3.write(q_50hz.s[i]);
-  
+}
   
   //Sending CRC
   Serial3.write((uint8_t)(crc>>8));
+
   Serial3.write((uint8_t)(crc & 0x00FF));
+  //Serial.println(crc);
 }
 
 
